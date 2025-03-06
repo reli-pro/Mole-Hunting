@@ -33,18 +33,18 @@ jobs:
 
       - name: Create executable file for Windows with pyinstaller and zip
         run: |
-          pyinstaller game.py --name Shooting-Game --onefile --noconsole --add-data "assets;assets"
+          pyinstaller mole-hunting.py --name Mole-Hunting --onefile --noconsole --add-data "assets;assets"
           pushd dist
           
           # バージョン番号を使ってWindows用のZIPファイル名を動的に作成
-          $zip_file_name = "Shooting-Game_windows_${{ env.version }}.zip"
-          Compress-Archive -Path Shooting-Game.exe -DestinationPath $zip_file_name
+          $zip_file_name = "Mole-Hunting_windows_${{ env.version }}.zip"
+          Compress-Archive -Path Mole-Hunting.exe -DestinationPath $zip_file_name
 
       - name: Upload Windows executable file to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/Shooting-Game_windows_${{ env.version }}.zip
+            dist/Mole_Hunting_windows_${{ env.version }}.zip
 
   build-and-release-mac:
     runs-on: macos-latest
@@ -70,16 +70,16 @@ jobs:
 
       - name: Create executable file for Mac with pyinstaller and zip
         run: |
-          pyinstaller game.py --name Shooting-Game --onefile --noconsole --add-data "assets:assets"
+          pyinstaller mole-hunting.py --name Mole-Hunting --onefile --noconsole --add-data "assets:assets"
           pushd dist
           
           # バージョン番号を使ってMac用のZIPファイル名を動的に作成
-          zip_file_name="Shooting-Game_mac_${{ env.version }}.zip"
-          zip -r $zip_file_name Shooting-Game.app
+          zip_file_name="Mole-Hunting_mac_${{ env.version }}.zip"
+          zip -r $zip_file_name Mole-Hunting.app
 
       - name: Upload Mac executable file to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/Shooting-Game_mac_${{ env.version }}.zip
+            dist/Mole-Hunting_mac_${{ env.version }}.zip
 
