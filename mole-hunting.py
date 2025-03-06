@@ -1,12 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox as msb
-from Sora import tki
+import tki
 import time
 import random
 import threading
+import sys
 
 """Local Photo Path (LP²)
-Picture Files   "./Visual Studio Code/Files/picture_file/mola-Hunting_Game/"
+Picture Files   "./assets/images/"
 Build No.       "./Visual Studio Code/Files/TXT File/mola-hunting/buildNo.sys"
 User Setting    "./Visual Studio Code/Files/TXT File/mola-hunting/userfile.cfg"
 """
@@ -16,13 +17,15 @@ class ShootingGame(tk.Frame):
         super().__init__(master)
 
         self.system_version_name = "WELCOME"
-        self.system_version = "v1.2.2"
-        self.system_lastupdated = "2024.08.10"
+        self.system_version = "v1.0.0"
+        self.system_lastupdated = "2025.03.06"
         self.system_buildNo = 0
         self.system_mola_apper_from = 1500
         self.system_mola_apper_until = 2000
         self.system_mola_wait = 5
-        self.system_show_mode = True
+        self.system_show_mode = False
+
+        self.lock = False
 
         self.flag_gameover = False
         self.point = 0
@@ -58,15 +61,15 @@ class ShootingGame(tk.Frame):
         self.create_menu()
 
         self.pic_mola_cd = [
-            "./Visual Studio Code/Files/picture_file/mola-Hunting_Game/hole-2.png",
-            "./Visual Studio Code/Files/picture_file/mola-Hunting_Game/hit-2.png",
-            "./Visual Studio Code/Files/picture_file/mola-Hunting_Game/mole-3.png",
-            "./Visual Studio Code/Files/picture_file/mola-Hunting_Game/hammer.png"
+            "./assets/images/hole-2.png",
+            "./assets/images/hit-2.png",
+            "./assets/images/mole-3.png",
+            "./assets/images/hammer.png"
         ]
         self.pic_mola_u = [
-            "./Visual Studio Code/Files/picture_file/Mola-Hunting_Game/hole2.png",
-            "./Visual Studio Code/Files/picture_file/Mola-Hunting_Game/hit2.png",
-            "./Visual Studio Code/Files/picture_file/Mola-Hunting_Game/mole-2.png"
+            "./assets/images/hole2.png",
+            "./assets/images/hit2.png",
+            "./assets/images/mole-2.png"
         ]
         self.add_pic()
 
@@ -103,13 +106,14 @@ class ShootingGame(tk.Frame):
 
 
     def get_buildNo(self):
-        with open("./Visual Studio Code/Files/TXT File/mola-hunting/buildNo.sys", "r") as f:
+        with open("./assets/sys/buildNo.sys", "r") as f:
             self.system_buildNo = f.readline()
             f.close()
-
-        with open("./Visual Studio Code/Files/TXT File/mola-hunting/buildNo.sys", "w") as f:
-            f.write(str(int(self.system_buildNo) + 1))
-            f.close()
+        
+        if getattr(sys, 'frozen', False):
+            with open("./assets/sys/buildNo.sys", "w") as f:
+                f.write(str(int(self.system_buildNo) + 1))
+                f.close()
 
     def Start_Up(self):
         output = [
@@ -145,19 +149,19 @@ class ShootingGame(tk.Frame):
         self.mouse_x = event.x
         self.mouse_y = event.y
 
-        self.Log(102, "MOUSE MOVED [x={event.x} y={event.y}]")
+        self.Log(102, f"MOUSE MOVED [x={event.x} y={event.y}]")
 
     def KeyEv_btn_press(self, event):
         self.mouse_clicked = 1
         self.num2+=1
 
-        self.Log(103, "MOUSE CLICKED [status={self.mouse_clicked}]")
+        self.Log(103, f"MOUSE CLICKED [status={self.mouse_clicked}]")
 
     def KeyEv_btn_release(self, event):
         self.mouse_clicked = 0
         self.num2=0
 
-        self.Log(104, "MOUSE RELEASED [status={self.mouse_clicked}]")
+        self.Log(104, f"MOUSE RELEASED [status={self.mouse_clicked}]")
 
     def create_menu(self):
         self.menu = tki.menu(master=self.master)
@@ -483,21 +487,26 @@ class ShootingGame(tk.Frame):
         if place == 11 or place == 12 or place == 13:
             return 0
 
-        if place == 21 or place == 22 or place == 23:
+        elif place == 21 or place == 22 or place == 23:
             return 1
 
-        if place == 31 or place == 32 or place == 33:
+        elif place == 31 or place == 32 or place == 33:
             return 2
+        
+        else:
+            return 0
 
     def calc_placeNo_2(self, place):
         if place == 11 or place == 21 or place == 31:
             return 0
 
-        if place == 12 or place == 22 or place == 32:
+        elif place == 12 or place == 22 or place == 32:
             return 1
 
-        if place == 13 or place == 23 or place == 33:
+        elif place == 13 or place == 23 or place == 33:
             return 2
+        else:
+            return 0
 
     def change_mola_status(self, a, t, status, wait):
         time.sleep(wait)
@@ -536,7 +545,7 @@ class ShootingGame(tk.Frame):
             while 1:
                 random1 = random.randint(0,2)
                 random2 = random.randint(0,2)
-                #print(f"Try: ({random1})({random2})")
+                print(f"Try: ({random1})({random2})")
                 if self.mola_status[random1][random2] == 0 and self.mola_flag[random1][random2] == 0:
                     return random1, random2
 
@@ -607,218 +616,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-VERSION INFORMATION
-<α>version 0.0 - 0.12.5 : ALPHA VERSION
-α v0.0.0    : create alpha version
-
-α v0.1.0    : some settings
-
-α v0.1.1    : delete bag
-
-α v0.1.2    : delete bag
-
-α v0.1.3    : delete bag
-
-α v0.2.0    : create menu
-
-α v0.2.1    : delete bag
-
-α v0.2.2    : delete bag
-
-α v0.2.3    : delete bag
-
-α v0.3.0    : can change width and height easily [for developer]
-
-α v0.4.0    : add mola pic
-
-α v0.4.1    : change geometry
-
-α v0.4.2    : put all molas
-
-α v0.4.3    : change geometry
-
-α v0.4.4    : control mola pictures
-
-α v0.5.0    : add hammer
-
-α v0.5.1    : calc hammer
-
-α v0.5.2    : hammer move
-
-α v0.6.0    : add hit jude
-
-α v0.6.1    : control hit judgement
-
-α v0.6.2    : delete bags
-
-α v0.6.3    : create_canvas(def) -> in tki modules
-
-α v0.6.4    : change title version
-
-α v0.6.5    : control a template of hit judgement delete
-
-              add last edition of hit judgement lines in Left-Up
-
-α v0.6.6    : add hit judgement in Center-Up
-
-α v0.6.7    : add hit judgement in Right-Up
-
-α v0.6.8    : add hit judgement in Left-Center
-
-α v0.6.9    : add hit judgement in Center-Center
-              change name [Left-Up         ->  Up-Left]
-              change name [Center-Up       ->  Up-Center]
-              change name [Right-Up        ->  Up-Right]
-              change name [Left-Center     ->  Center-Left]
-              change name [Center-Center   ->  Center-Center]
-
-α v0.6.10   : change Up-Left's color [orange -> #EE82EE]
-
-α v0.6.11   : change Up-Left's color [#EE82EE -> #7FFF00]
-
-α v0.6.12   : add hit judgement in Center-Right
-
-α v0.6.13   : add hit judgement in Under-Left
-
-α v0.6.14   : change version name [α v0.6.11 -> α v0.6.0A]
-              change version name [α v0.6.12 -> α v0.6.0B]
-              change version name [α v0.6.13 -> α v0.6.0C]
-              change version name [α v0.6.14 -> α v0.6.0D]
-
-α v0.6.15   : change version name [α v0.6.0A -> α v0.6.11]
-              change version name [α v0.6.0B -> α v0.6.12]
-              change version name [α v0.6.0C -> α v0.6.13]
-              change version name [α v0.6.0D -> α v0.6.14]
-              change version name [α v0.6.0E -> α v0.6.15]
-              change α v0.3.0's version info [can change width and and height easily -> can cange width and height easily [for developer]]
-              change version info's indent [->show.example.direct.place.under]
-                .item.maked.user.name.Example
-                    [BEFORE] ~ α v0.6.14
-                      α v0.0.0 : ~
-                      α v0.0.1 : ~
-                                 ~
-                    [AFTER] α 0.6.15 ~
-                      α v0.0.0 : ~
-
-                      α v0.0.1 : ~
-                                 ~
-
-α v0.6.16   : add hit judgement in Under-Center
-
-α v0.6.17   : add hit judgement in Under-Right
-
-α v0.6.18   : add hit judgement system
-              add hit judgement in Up-Left
-
-α v0.6.19   : add hit judgement in Up-Center
-
-α v0.6.20   : add hit judgement in Up-Right
-
-α v0.6.21   : add hit judgement in Center-Left
-
-α v0.6.22   : add hit judgement in Center-Center
-
-α v0.6.23   : add hit judgement in Center-Right
-
-α v0.6.24   : add hit judgement in Down-Left
-
-α v0.6.25   : add hit judgement in Down-Center
-
-α v0.6.26   : add hit judgement in Down-Right
-
-α v0.6.27   : delete all judgement lines
-
-α v0.6.28   : def pic -> tki.pic
-
-α v0.6.29   : delete bugs
-
-α v0.6.30   : control of picture size, place, picture data, and background
-
-α v0.7.0    : add Logs Number Fifth-dight
-
-α v0.8.0    : compatible with Sora v2.7.0
-
-α v0.9.0    : add a menu of varriable
-
-α v0.10.0   : add build No.
-              add file "buildNo.sys"
-
-α v0.10.1   : edit title
-                "mola Hunting - α vx.x.x"   ->   "Mola Hunting - α vx.x.x - Build No.y"
-
-α v0.11.0   : add variable window
-
-α v0.11.1   : fixed spell
-
-α v0.11.2   : fixed click judge !!!!!!
-
-α v0.11.3   : fixed canvas bugs
-
-α v0.11.4   : fixed click judgement
-
-α v0.12.0   : add all lanes hit judgement
-
-α v0.12.1   : fixed hit judgment bug
-
-α v0.12.2   : change log id (105->200, 106->105)
-
-α v0.12.3   : delete Thread method.
-
-α v0.12.4   : all log programs include self.log
-
-α v0.12.5   : change version name (Developer Edition -> Alpha Version)
-
-<β> version 0.13.0 -> 0.20.0 : Beta Version
-β v0.13.0   : create beta version
-
-β v0.14.0   : place mola automatically
-
-β v0.15.0   : set gameover status
-
-β v0.15.1   : fixed bugs
-
-β v0.16.0   : add clear time
-
-β v0.17.0   : add point system perfectly
-
-β v0.17.1   : fixed kill bugs
-
-β v0.18.0   : add restart button
-
-β v0.18.1   : fixed restart bugs
-
-β v0.18.2   : fixed restart bugs 2
-
-β v0.18.3   : fixed restart bugs 3
-
-β v0.19.0   : change menu name [detail -> varriable]
-
-β v0.19.1   : fixed bugs adaptation for new menu' name[varriable]
-
-β v0.20.0   : change cascades place [Help-version -> View-version]
-              add contents to view-version [View-version]
-
-<1.0> version 1.0 : Release version [WELCOME]
-v1.0.0      : create release version [WELCOME]
-
-v1.0.1      : fixed ending bugs
-
-v1.1.0      : add settings option
-
-v1.2.0      : add settings options
-
-v1.2.1      : delete pronpt print TRY
-
-v1.2.2      : delete 3 fixmes point(sucsessed at alpha 0.11.2)
-"""
-"""
-<d> DEVELOPERS EDITION
-
-DEVELOPER MODE CAN TURN ON TO PRESS D KEY, E KEY AND V KEY WHILE MOUSE CIRCLE PUT ON THE MOST UNDER WINDOW SCALE IN THE WINDOW.
-マウスカーソルがウィンドウの最も下にあるとき、D+E+Vキーを押すとデベロッパーモードを起動できます。
-
-α v0.6.29-d1: [for Developer Edition] Add Developer menu
-
-"""
