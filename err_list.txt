@@ -1,0 +1,33 @@
+[informational] リクエストは成功し、処理が継続
+[Success] リクエストが成功した
+[Redirection] リダイレクション
+[Client Error]　クライエントエラー
+[Server Error]サーバーエラー
+
+[Info]
+[Success]
+[Redirection]
+[Client Error]
+[Waiting]
+
+# [Info] 100 ~ 199
+100 : OBJECT CLICKED [IN(.POS)]
+101 : MOUSE IS ON THE OBJ [(.NAME)]
+102 : MOUSE MOVED [x=(.POS.x) y=(.POS.y)]
+103 : MOUSE CLICKED [status=(.STATUS)]
+104 : MOUSE RELEASED [status=(.STATUS)]
+105 : OBJECT HAS ALREADY DELETED [(.PLACE)]
+
+# [Success] 200~299
+200 : OBJECT DELETE SUCCESS [(.PLACE)]
+201 : GAME WAS ENDED
+
+# [Redirection] 301 ~ 399
+300 : OBJECT IS NOT USED
+301 : OBJECT IS NOT PROGRAMED
+
+# [Client Error] 400 ~ 499
+400 : WINDOW WAS EXISTS
+
+# [Waiting] 500~599
+501 : WAIT DURING MOUSE CLICK
