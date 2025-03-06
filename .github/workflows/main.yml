@@ -77,9 +77,22 @@ jobs:
           zip_file_name="Mole-Hunting_mac_${{ env.version }}.zip"
           zip -r $zip_file_name Mole-Hunting.app
 
+      - name: Sign Mac application with self-signed certificate
+        run: |
+          # GitHub Secretsから証明書と秘密鍵を取得
+          echo "$CERTIFICATE_PRIVATE_KEY" > private.key
+          echo "$CERTIFICATE_P12" > certificate.p12
+          
+          # キーチェーンの作成と証明書のインストール
+          sudo security create-keychain -p "" build.keychain
+          sudo security import certificate.p12 -k ~/Library/Keychains/build.keychain -P "" -T /usr/bin/codesign
+          sudo security list-keychains -d user -s ~/Library/Keychains/build.keychain
+          
+          # アプリケーションを署名
+          codesign --sign "Mole-Hunting" --keychain ~/Library/Keychains/build.keychain Mole-Hunting.app
+
       - name: Upload Mac executable file to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
           files: |
             dist/Mole-Hunting_mac_${{ env.version }}.zip
-
