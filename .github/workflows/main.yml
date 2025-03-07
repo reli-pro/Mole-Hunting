@@ -28,7 +28,7 @@ jobs:
       - name: Get version from pyproject.toml
         id: version
         run: |
-          version = python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])"
+          $version = python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])"
           echo "version=$version" >> $GITHUB_ENV
 
 
@@ -66,7 +66,7 @@ jobs:
       - name: Get version from pyproject.toml
         id: version
         run: |
-          version=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
+          $version=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Create executable file for Mac with pyinstaller and zip
