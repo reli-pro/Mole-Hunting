@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.13.2
+          python-version: 3.11
 
       - name: Install Poetry and dependencies
         run: |
@@ -29,12 +29,11 @@ jobs:
         id: version
         run: |
           $version = python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])"
-          echo "version=$version" >> $GITHUB_ENV
-
+          echo "version=$version" >> $GITHUB_ENV  # PowerShellではechoで環境変数を設定
 
       - name: Create executable file for Windows with pyinstaller and zip
         run: |
-          pyinstaller mole-hunting.py --name Mole-Hunting --onefile --noconsole --add-data "assets;assets"
+          pyinstaller game.py --name Mole-Hunting --onefile --noconsole --add-data "assets;assets"
           pushd dist
           
           # バージョン番号を使ってWindows用のZIPファイル名を動的に作成
@@ -45,7 +44,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/Mole_Hunting_windows_${{ env.version }}.zip
+            dist/Mole-Hunting_windows_${{ env.version }}.zip
 
   build-and-release-mac:
     runs-on: macos-latest
@@ -56,7 +55,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.13.2
+          python-version: 3.11
 
       - name: Install Poetry and dependencies
         run: |
@@ -66,31 +65,17 @@ jobs:
       - name: Get version from pyproject.toml
         id: version
         run: |
-          $version=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
+          version=$(python -c "import toml; print(toml.load('pyproject.toml')['tool']['poetry']['version'])")
           echo "version=$version" >> $GITHUB_ENV
 
       - name: Create executable file for Mac with pyinstaller and zip
         run: |
-          pyinstaller mole-hunting.py --name Mole-Hunting --onefile --noconsole --add-data "assets:assets"
+          pyinstaller game.py --name Mole-Hunting --onefile --noconsole --add-data "assets:assets"
           pushd dist
           
           # バージョン番号を使ってMac用のZIPファイル名を動的に作成
           zip_file_name="Mole-Hunting_mac_${{ env.version }}.zip"
           zip -r $zip_file_name Mole-Hunting.app
-
-      - name: Sign Mac application with self-signed certificate
-        run: |
-          # GitHub Secretsから証明書と秘密鍵を取得
-          echo "$CERTIFICATE_PRIVATE_KEY" > private.key
-          echo "$CERTIFICATE_P12" > certificate.p12
-          
-          # キーチェーンの作成と証明書のインストール
-          sudo security create-keychain -p "" build.keychain
-          sudo security import certificate.p12 -k ~/Library/Keychains/build.keychain -P "" -T /usr/bin/codesign
-          sudo security list-keychains -d user -s ~/Library/Keychains/build.keychain
-          
-          # アプリケーションを署名
-          codesign --sign "Mole-Hunting" --keychain ~/Library/Keychains/build.keychain Mole-Hunting.app
 
       - name: Upload Mac executable file to GitHub Releases
         uses: softprops/action-gh-release@v2
